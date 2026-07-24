@@ -128,7 +128,7 @@ pytest
 
 1. Enter the expected application values.
 2. Upload an alcohol label image.
-3. Click **Analyze Label**.
+3. Click **Verify Label**.
 4. Review the extracted values and validation results.
 5. Use **Start New Verification** to begin another review.
 
