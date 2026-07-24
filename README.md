@@ -1,7 +1,7 @@
 # AI-Powered Alcohol Label Verification App
 
 **Take-Home Assessment for**  
-**TTB IT Specialist (Artificial Intelligence)**
+**IT Specialist (Artificial Intelligence)**
 
 **Status:** ✅ Complete Prototype  
 **Language:** Python  
