@@ -218,4 +218,4 @@ Streamlit was selected because it enables rapid development of interactive Pytho
 ---
 # Acknowledgements
 
-This prototype was developed as part of the TTB IT Specialist (Artificial Intelligence) take-home assessment and is intended solely as a proof of concept demonstrating the practical use of AI-assisted document verification.
+This prototype was developed as part of the IT Specialist (Artificial Intelligence) take-home assessment and is intended solely as a proof of concept demonstrating the practical use of AI-assisted document verification.
