@@ -9,11 +9,19 @@
 **OCR:** Azure AI Vision  
 **Tests:** ✅ 46 Passing
 
+GitHub Repository:
+<repo>
+
+Live Application:
+<streamlit>
+
 ---
 
 # Project Overview
 
-Hello! Thanks for checking out this project. I had a ton of fun and learned a lot. I developed this prototype web application as part of the TTB IT Specialist (Artificial Intelligence) take-home assessment.
+This repository contains my submission for the TTB IT Specialist (Artificial Intelligence) take-home assessment.
+
+The project demonstrates a proof-of-concept application that assists label compliance reviewers by automating routine verification tasks using Azure AI Vision OCR and deterministic validation logic.
 
 The application assists label compliance reviewers by comparing expected application values against text extracted from an uploaded alcohol label image.
 
@@ -30,49 +38,45 @@ The Alcohol and Tobacco Tax and Trade Bureau (TTB) reviews approximately 150,000
 Rather than replacing compliance specialists, this prototype is designed to assist reviewers by automating repetitive comparison tasks and highlighting fields that require additional attention.
 
 ---
+## Objectives
 
-# Solution Overview
+This prototype was designed to:
 
-The application follows a simple workflow:
-
-1. The reviewer enters the expected application values.
-2. An alcohol label image is uploaded.
-3. Azure AI Vision extracts text from the label.
-4. The application parses relevant fields.
-5. Deterministic validation compares extracted values with the expected values.
-6. Results are displayed as **Match**, **Manual Review**, or **Mismatch** for each field.
-
-This approach keeps AI focused on text extraction while using transparent validation rules for compliance comparisons.
+- Reduce repetitive manual verification performed by compliance agents.
+- Improve consistency when comparing application data with label artwork.
+- Preserve human oversight by routing uncertain cases to Manual Review.
+- Demonstrate a practical AI-assisted workflow that could support future modernization efforts.
 
 ---
 
-# Features
+# Solution Overview
 
-- Upload beer, wine, or distilled spirits label images
-- OCR using Azure AI Vision
-- Detection of:
-  - Beverage Type
-  - Brand Name
-  - Class/Type
-  - Alcohol by Volume (ABV)
-  - Net Contents
-  - Government Warning
-- Deterministic field validation
-- OCR tolerance for minor recognition errors
-- Manual Review routing for ambiguous results
-- Reset workflow for new verifications
-- Automated test suite with **46 passing tests**
+## Approach
+
+The application follows a pipeline architecture:
+
+User Input → Azure OCR → Field Parser → Validation Engine → Verification Results
+
+The modular architecture is used to separate responsibilities and improve maintainability.
+
+- Streamlit provides the user interface.
+- Azure AI Vision performs OCR on uploaded label images.
+- A parser extracts relevant TTB label fields from OCR output.
+- A validation layer compares extracted values with user-provided expected values.
+- Results are classified as Match, Mismatch, or Manual Review.
+
+This allows OCR, parsing, and validation to evolve independently and makes the application easier to test and extend.
 
 ---
 
 # Technology Stack
 
-- Python
-- Streamlit
 - Azure AI Vision
 - Pillow
 - pytest
+- Python
 - python-dotenv
+- Streamlit
 
 ---
 
@@ -89,10 +93,10 @@ The following diagram illustrates the high-level workflow of the application.
 ```
 app.py
 src/
-    extractor.py
-    models.py
-    parsers.py
-    validators.py
+    extractor.py      # Azure OCR integration
+    models.py         # Shared data models
+    parsers.py        # Field extraction logic
+    validators.py     # Validation rules
 tests/
 requirements.txt
 README.md
@@ -108,7 +112,7 @@ Install the required packages:
 pip install -r requirements.txt
 ```
 
-Create a `.env` file containing your Azure AI Vision endpoint and API key.
+Create a `.env` file (or configure Streamlit Secrets when deploying) containing your Azure AI Vision endpoint and API key.
 
 Run the application:
 
@@ -138,40 +142,46 @@ pytest
 
 When I planned this prototype, I wanted to keep the solution simple, transparent, and aligned with the stakeholder interviews.
 
-Rather than asking AI to make compliance decisions, I used Azure AI Vision only for OCR. All comparisons are performed using deterministic validation rules that produce consistent and explainable results. Any uncertainty is routed to **Manual Review**, allowing a compliance specialist to make the final determination.
+Rather than allowing AI to make compliance decisions, I used Azure AI Vision only for OCR. All comparisons are performed using deterministic validation rules that produce consistent and explainable results. Any uncertainty is routed to **Manual Review**, allowing a compliance specialist to make the final determination.
 
 I believe this approach provides a good balance between automation and accountability while keeping the application easy to understand, test, and maintain.
 
 ---
 
-# Assumptions
+## Assumptions
 
-- Expected application values are available before verification begins.
-- OCR quality depends on the clarity of the uploaded label image.
-- Human reviewers make the final compliance decision.
-- This application is intended as a standalone prototype and does not integrate with existing TTB systems.
+This prototype assumes:
 
+- Users enter the expected application values manually.
+- Uploaded images contain a single alcohol label.
+- Azure AI Vision successfully extracts readable text.
+- Human reviewers remain responsible for final approval decisions, particularly for Manual Review cases.
 ---
 
-# Known Limitations
+## Limitations & Future Enhancements
 
-- OCR accuracy depends on image quality.
-- Decorative fonts and damaged labels may require manual review.
-- The application validates a defined set of label fields and is not intended to replace a complete regulatory review.
-- Batch processing and enterprise system integration are outside the scope of this prototype.
+### Current Limitations
 
----
+This application was intentionally developed as a focused proof-of-concept to demonstrate AI-assisted label verification.
 
-# Future Enhancements
+Current limitations include:
 
-Potential future improvements include:
+- OCR accuracy depends on the quality, orientation, and readability of the uploaded label image.
+- The application requires internet connectivity to communicate with Azure AI Vision.
+- Government Warning validation currently verifies the presence of the required warning statement. Exact typography (such as bold formatting and capitalization) is outside the scope of this prototype because OCR services primarily extract text rather than formatting.
+- Images are processed individually. Batch processing of multiple labels was intentionally deferred to prioritize a stable, fully functional single-label workflow.
 
-- Integration with TTB application systems
-- Batch processing of multiple labels
-- Additional label field validation
-- OCR confidence scoring
-- Analytics and reporting
-- Continuous improvement using reviewer feedback
+### Future Enhancements
+
+Potential enhancements for a production-ready solution include:
+
+- Batch upload and processing of multiple label images with associated application data.
+- Exact validation of the complete Government Warning statement, including formatting requirements.
+- Validation of additional TTB fields such as producer/bottler information and country of origin.
+- Image preprocessing to improve OCR performance on skewed, low-light, or glare-affected photographs.
+- Confidence scoring for extracted fields.
+- Persistent audit logging and reporting of verification results.
+- Integration with future COLA workflows once authorization and security requirements are defined.
 
 ---
 
@@ -182,6 +192,44 @@ Building this project reinforced for me the importance of separating AI-assisted
 OCR can efficiently identify text on a label, but deterministic validation provides consistent and transparent comparisons against expected application data. Through testing across beer, wine, and distilled spirits labels, I found that routing uncertain cases to **Manual Review** produces more reliable behavior than trying to automate every edge case.
 
 This experience also reinforced the value of designing AI solutions that assist people rather than replace them. For this proof of concept, keeping a human reviewer in the decision-making process felt like the most practical and responsible approach.
+
+---
+
+## Design Trade-Offs
+
+Given the time-constrained nature of this prototype, development prioritized:
+
+- Clean modular architecture
+- Accurate core verification logic
+- Simple user experience
+- Reliable deployment
+
+Rather than implementing production-scale capabilities such as database storage, batch processing, or direct integration with the COLA system.
+
+These capabilities were intentionally deferred to maintain a stable and complete proof-of-concept.
+
+---
+
+## Testing
+
+Unit tests were implemented using pytest to validate:
+
+- Field extraction
+- Parsing logic
+- Brand matching
+- Alcohol content detection
+- Validation rules
+- Edge cases
+
+This helps ensure application behavior remains consistent as future enhancements are added.
+
+---
+
+## Technology Choices
+
+Azure AI Vision was selected because it provides a managed OCR service without requiring custom model training. This allowed development effort to focus on parsing, validation logic, and user experience rather than optical character recognition itself.
+
+Streamlit was selected because it enables rapid development of interactive Python web applications while keeping the prototype lightweight and easy to deploy.
 
 ---
 
