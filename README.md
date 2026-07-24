@@ -80,7 +80,7 @@ This approach keeps AI focused on text extraction while using transparent valida
 
 The following diagram illustrates the high-level workflow of the application.
 
-![System Architecture](docs/system-architecture.png)
+![System Architecture](docs/System-Architecture.png)
 
 ---
 
