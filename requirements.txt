@@ -3,3 +3,4 @@ Pillow==12.3.0
 python-dotenv==1.2.2
 requests==2.34.2
 pytest==9.1.1
+azure-ai-vision-imageanalysis
