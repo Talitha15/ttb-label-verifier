@@ -10,10 +10,10 @@
 **Tests:** ✅ 46 Passing
 
 GitHub Repository:
-<repo>
+<https://github.com/Talitha15/ttb-label-verifier>
 
 Live Application:
-<streamlit>
+<https://ttb-label-verifier-fuimaono.streamlit.app>
 
 ---
 
@@ -38,6 +38,7 @@ The Alcohol and Tobacco Tax and Trade Bureau (TTB) reviews approximately 150,000
 Rather than replacing compliance specialists, this prototype is designed to assist reviewers by automating repetitive comparison tasks and highlighting fields that require additional attention.
 
 ---
+
 ## Objectives
 
 This prototype was designed to:
@@ -156,6 +157,7 @@ This prototype assumes:
 - Uploaded images contain a single alcohol label.
 - Azure AI Vision successfully extracts readable text.
 - Human reviewers remain responsible for final approval decisions, particularly for Manual Review cases.
+
 ---
 
 ## Limitations & Future Enhancements
