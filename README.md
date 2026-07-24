@@ -18,7 +18,7 @@ Live Application:
 ---
 # Project Overview
 
-This repository contains my submission for the TTB IT Specialist (Artificial Intelligence) take-home assessment.
+This repository contains my submission for the IT Specialist (Artificial Intelligence) take-home assessment.
 
 The project demonstrates a proof-of-concept application that assists label compliance reviewers by automating routine verification tasks using Azure AI Vision OCR and deterministic validation logic.
 
