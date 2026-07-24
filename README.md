@@ -16,7 +16,6 @@ Live Application:
 <https://ttb-label-verifier-fuimaono.streamlit.app>
 
 ---
-
 # Project Overview
 
 This repository contains my submission for the TTB IT Specialist (Artificial Intelligence) take-home assessment.
@@ -30,7 +29,6 @@ Azure AI Vision is used to perform Optical Character Recognition (OCR), while de
 The goal of this prototype is to demonstrate how AI can improve review efficiency while maintaining transparency and human oversight.
 
 ---
-
 # Background
 
 The Alcohol and Tobacco Tax and Trade Bureau (TTB) reviews approximately 150,000 alcohol label applications each year. Stakeholder interviews identified opportunities to reduce manual data entry and improve consistency by automatically extracting label information before comparing it with the submitted application.
@@ -38,7 +36,6 @@ The Alcohol and Tobacco Tax and Trade Bureau (TTB) reviews approximately 150,000
 Rather than replacing compliance specialists, this prototype is designed to assist reviewers by automating repetitive comparison tasks and highlighting fields that require additional attention.
 
 ---
-
 ## Objectives
 
 This prototype was designed to:
@@ -49,9 +46,7 @@ This prototype was designed to:
 - Demonstrate a practical AI-assisted workflow that could support future modernization efforts.
 
 ---
-
 # Solution Overview
-
 ## Approach
 
 The application follows a pipeline architecture:
@@ -69,7 +64,6 @@ The modular architecture is used to separate responsibilities and improve mainta
 This allows OCR, parsing, and validation to evolve independently and makes the application easier to test and extend.
 
 ---
-
 # Technology Stack
 
 - Azure AI Vision
@@ -80,7 +74,6 @@ This allows OCR, parsing, and validation to evolve independently and makes the a
 - Streamlit
 
 ---
-
 # System Architecture
 
 The following diagram illustrates the high-level workflow of the application.
@@ -88,7 +81,6 @@ The following diagram illustrates the high-level workflow of the application.
 ![System Architecture](docs/System-Architecture.png)
 
 ---
-
 # Project Structure
 
 ```
@@ -104,7 +96,6 @@ README.md
 ```
 
 ---
-
 # Installation
 
 Install the required packages:
@@ -128,7 +119,6 @@ pytest
 ```
 
 ---
-
 # Example Workflow
 
 1. Enter the expected application values.
@@ -138,7 +128,6 @@ pytest
 5. Use **Start New Verification** to begin another review.
 
 ---
-
 # Design Decisions
 
 When I planned this prototype, I wanted to keep the solution simple, transparent, and aligned with the stakeholder interviews.
@@ -148,7 +137,6 @@ Rather than allowing AI to make compliance decisions, I used Azure AI Vision onl
 I believe this approach provides a good balance between automation and accountability while keeping the application easy to understand, test, and maintain.
 
 ---
-
 ## Assumptions
 
 This prototype assumes:
@@ -159,9 +147,7 @@ This prototype assumes:
 - Human reviewers remain responsible for final approval decisions, particularly for Manual Review cases.
 
 ---
-
 ## Limitations & Future Enhancements
-
 ### Current Limitations
 
 This application was intentionally developed as a focused proof-of-concept to demonstrate AI-assisted label verification.
@@ -186,7 +172,6 @@ Potential enhancements for a production-ready solution include:
 - Integration with future COLA workflows once authorization and security requirements are defined.
 
 ---
-
 # Lessons Learned
 
 Building this project reinforced for me the importance of separating AI-assisted text extraction from business logic.
@@ -196,7 +181,6 @@ OCR can efficiently identify text on a label, but deterministic validation provi
 This experience also reinforced the value of designing AI solutions that assist people rather than replace them. For this proof of concept, keeping a human reviewer in the decision-making process felt like the most practical and responsible approach.
 
 ---
-
 ## Design Trade-Offs
 
 Given the time-constrained nature of this prototype, development prioritized:
@@ -211,7 +195,6 @@ Rather than implementing production-scale capabilities such as database storage,
 These capabilities were intentionally deferred to maintain a stable and complete proof-of-concept.
 
 ---
-
 ## Testing
 
 Unit tests were implemented using pytest to validate:
@@ -226,7 +209,6 @@ Unit tests were implemented using pytest to validate:
 This helps ensure application behavior remains consistent as future enhancements are added.
 
 ---
-
 ## Technology Choices
 
 Azure AI Vision was selected because it provides a managed OCR service without requiring custom model training. This allowed development effort to focus on parsing, validation logic, and user experience rather than optical character recognition itself.
@@ -234,7 +216,6 @@ Azure AI Vision was selected because it provides a managed OCR service without r
 Streamlit was selected because it enables rapid development of interactive Python web applications while keeping the prototype lightweight and easy to deploy.
 
 ---
-
 # Acknowledgements
 
 This prototype was developed as part of the TTB IT Specialist (Artificial Intelligence) take-home assessment and is intended solely as a proof of concept demonstrating the practical use of AI-assisted document verification.
