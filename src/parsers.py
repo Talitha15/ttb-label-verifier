@@ -384,21 +384,25 @@ def _select_brand_name(
 
             # Do not join a prominent brand with a multiword lowercase
             # descriptive or marketing phrase.
-            first_is_lower_phrase = (
-                first_text.islower()
-                and len(first_text.split()) >= 2
+            first_words = first_text.split()
+            second_words = second_text.split()
+
+            first_is_phrase = (
+                len(first_words) >= 2
+                and first_words[0].lower() in {"the", "a", "an"}
             )
-            second_is_lower_phrase = (
-                second_text.islower()
-                and len(second_text.split()) >= 2
+
+            second_is_phrase = (
+                len(second_words) >= 2
+                and second_words[0].lower() in {"the", "a", "an"}
             )
 
             if (
                 first_text.isupper()
-                and second_is_lower_phrase
+                and second_is_phrase
             ) or (
                 second_text.isupper()
-                and first_is_lower_phrase
+                and first_is_phrase
             ):
                 continue
 
@@ -815,7 +819,7 @@ def _extract_warning_block(lines: list[OCRLine]) -> str:
         # Ignore unrelated sections instead of ending the search.
         if any(phrase in upper_text for phrase in stop_phrases):
             continue
-        
+
         vertical_gap = line.y - previous_y
 
         if vertical_gap > typical_height * 4.5:
