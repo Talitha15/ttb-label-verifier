@@ -325,17 +325,37 @@ def _select_brand_name(
     max_right = max((line.x + line.width for line in lines), default=0.0)
     image_center_x = max_right / 2 if max_right > 0 else 0.0
 
+    # When OCR geometry is available, prioritize text located near the
+    # horizontal center of the label. Side-panel text is usually descriptive
+    # or regulatory wording rather than the primary brand.
+    if use_geometry and image_center_x > 0:
+        centered_indexes = []
+
+        for index in candidate_indexes:
+            line_center_distance = abs(
+                lines[index].center_x - image_center_x
+            )
+            center_ratio = line_center_distance / image_center_x
+
+            if center_ratio <= 0.35:
+                centered_indexes.append(index)
+
+        # Only apply the restriction when centered candidates actually exist.
+        # This preserves support for labels whose brand is intentionally offset.
+        if centered_indexes:
+            candidate_indexes = centered_indexes
+        
     candidates = [
         (
             index,
             lines[index],
-            _brand_line_score(
+                _brand_line_score(
                 line=lines[index],
                 index=index,
                 max_height=max_height,
                 image_center_x=image_center_x,
                 use_geometry=use_geometry,
-            ),
+                ),
         )
         for index in candidate_indexes
     ]
@@ -366,11 +386,11 @@ def _select_brand_name(
             # descriptive or marketing phrase.
             first_is_lower_phrase = (
                 first_text.islower()
-                and len(first_text.split()) >= 3
+                and len(first_text.split()) >= 2
             )
             second_is_lower_phrase = (
                 second_text.islower()
-                and len(second_text.split()) >= 3
+                and len(second_text.split()) >= 2
             )
 
             if (
@@ -692,21 +712,125 @@ def parse_label_text(ocr_input: str | OCRResult) -> LabelData:
             used_indexes.add(index)
             break
 
-    warning_start = None
-
-    for index, line in enumerate(lines):
-        if "government warning" in line.casefold():
-            warning_start = index
-            break
-
-    if warning_start is not None:
-        label.government_warning = " ".join(lines[warning_start:])
-        used_indexes.update(range(warning_start, len(lines)))
-
+    warning_text = _extract_warning_block(ocr_lines)
+    
+    if warning_text:
+        label.government_warning = warning_text
+            
     label.brand_name = _select_brand_name(
         lines=ocr_lines,
         used_indexes=used_indexes,
     )
 
     return label
+
+def _extract_warning_block(lines: list[OCRLine]) -> str:
+    """
+    Extract the government warning from the same visual side/column
+    as the GOVERNMENT WARNING heading.
+
+    This prevents OCR text from the opposite side of a bottle or can
+    from being merged into the warning.
+    """
+    if not lines:
+        return ""
+
+    warning_index = next(
+        (
+            index
+            for index, line in enumerate(lines)
+            if "GOVERNMENT WARNING" in line.text.upper()
+        ),
+        None,
+    )
+
+    if warning_index is None:
+        return ""
+
+    warning_line = lines[warning_index]
+
+    # Plain-text tests do not contain geometry.
+    # Preserve the existing text-order behavior in that situation.
+    if not _geometry_available(lines):
+        return " ".join(
+            line.text.strip()
+            for line in lines[warning_index:]
+            if line.text.strip()
+        )
+
+    image_right = max(
+        (line.x + line.width for line in lines),
+        default=0.0,
+    )
+
+    if image_right <= 0:
+        return warning_line.text.strip()
+
+    image_center_x = image_right / 2
+    warning_center_x = warning_line.center_x
+
+    warning_is_left = warning_center_x < image_center_x
+
+    # Allow warning lines to extend toward the middle without crossing
+    # deeply into the opposite side of the label.
+    if warning_is_left:
+        allowed_min_x = 0.0
+        allowed_max_x = image_center_x * 1.10
+    else:
+        allowed_min_x = image_center_x * 0.90
+        allowed_max_x = image_right
+
+    warning_parts = [warning_line.text.strip()]
+    previous_y = warning_line.y
+    typical_height = max(warning_line.height, 1.0)
+
+    stop_phrases = (
+        "NUTRITION FACTS",
+        "CALORIES",
+        "PROTEIN",
+        "INGREDIENTS",
+        "BREWED BY",
+        "BREWING COMPANY",
+        "BOTTLED BY",
+        "IMPORTED BY",
+        "DISTRIBUTED BY",
+        "REFUND",
+        "DEPOSIT",
+        "UPC",
+    )
+
+    for line in lines[warning_index + 1:]:
+        text = line.text.strip()
+
+        if not text:
+            continue
+
+        upper_text = text.upper()
+        line_center_x = line.center_x
+
+        # Ignore text from the opposite side, but keep searching.
+        if not (allowed_min_x <= line_center_x <= allowed_max_x):
+            continue
+
+        # Ignore unrelated sections instead of ending the search.
+        if any(phrase in upper_text for phrase in stop_phrases):
+            continue
+        
+        vertical_gap = line.y - previous_y
+
+        if vertical_gap > typical_height * 4.5:
+            break
+
+        warning_parts.append(text)
+        previous_y = line.y
+        typical_height = max(
+            typical_height,
+            line.height,
+            1.0,
+        )
+
+
+    return " ".join(warning_parts)
+
+   
 

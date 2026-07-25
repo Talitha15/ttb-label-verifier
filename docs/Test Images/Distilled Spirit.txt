@@ -1,0 +1,10 @@
+Distilled_Spirit_Expected.txt
+
+Beverage Type: Distilled Spirits
+Brand Name: Jim Bean
+Class/Type: Bourbon Whiskey
+ABV: 40
+Net Contents: 750 ml
+
+Notes:
+- government warning is not visible on the front label

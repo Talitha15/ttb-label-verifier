@@ -1,0 +1,11 @@
+Beer_Expected.txt
+
+Beverage Type: Beer
+Brand Name: Bud Light
+Class/Type: Light Beer
+ABV: -
+Net Contents: 12 oz
+
+Notes:
+- front label does not display alcohol by volume
+- government warning should be detected 

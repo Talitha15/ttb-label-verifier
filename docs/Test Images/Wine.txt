@@ -1,0 +1,10 @@
+Wine_Expected.txt
+
+Beverage Type: Wine
+Brand Name: Meiomi
+Class/Type: Pinot Noir
+ABV: 13.5
+Net Contents: 750 ml
+
+Notes:
+- government warning is not visible on the front label

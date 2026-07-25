@@ -167,6 +167,7 @@ Potential enhancements for a production-ready solution include:
 - Exact validation of the complete Government Warning statement, including formatting requirements.
 - Validation of additional TTB fields such as producer/bottler information and country of origin.
 - Image preprocessing to improve OCR performance on skewed, low-light, or glare-affected photographs.
+- Add a secondary OCR pass that automatically crops and rotates vertically printed government warnings to improve extraction accuracy on cylindrical containers before escalating to manual review.
 - Confidence scoring for extracted fields.
 - Persistent audit logging and reporting of verification results.
 - Integration with future COLA workflows once authorization and security requirements are defined.
