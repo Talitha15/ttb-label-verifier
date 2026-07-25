@@ -643,7 +643,10 @@ def parse_label_text(ocr_input: str | OCRResult) -> LabelData:
 
     net_contents_pattern = re.compile(
         r"\b(\d+(?:\.\d+)?)\s*"
-        r"(mL|L|cL|fl\.?\s*oz\.?|fluid ounces?)\b",
+        r"(mL|milliliters?|millilitres?|"
+        r"L|liters?|litres?|"
+        r"cL|centiliters?|centilitres?|"
+        r"fl\.?\s*oz\.?|fluid ounces?|ounces?)\b",
         re.IGNORECASE,
     )
 
@@ -651,9 +654,23 @@ def parse_label_text(ocr_input: str | OCRResult) -> LabelData:
         match = net_contents_pattern.search(line)
 
         if match:
-            label.net_contents = (
-                f"{match.group(1)} {match.group(2)}".strip()
-            )
+            amount = match.group(1)
+            unit = match.group(2).casefold().replace(".", "").strip()
+
+            if unit in {"ml", "milliliter", "milliliters", "millilitre", "millilitres"}:
+                normalized_unit = "mL"
+            elif unit in {"l", "liter", "liters", "litre", "litres"}:
+                normalized_unit = "L"
+            elif unit in {"cl", "centiliter", "centiliters", "centilitre", "centilitres"}:
+                normalized_unit = "cL"
+            elif unit.replace(" ", "") in {"floz", "fluidounce", "fluidounces"}:
+                normalized_unit = match.group(2)   # Preserve original OCR formatting
+            elif unit in {"ounce", "ounces"}:
+                normalized_unit = match.group(2)
+            else:
+                normalized_unit = match.group(2)
+
+            label.net_contents = f"{amount} {normalized_unit}"
             used_indexes.add(index)
             break
 

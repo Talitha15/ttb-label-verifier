@@ -197,7 +197,7 @@ These capabilities were intentionally deferred to maintain a stable and complete
 ---
 ## Testing
 
-Unit tests were implemented using pytest to validate:
+Testing was performed using multiple real-world beer, wine, and distilled spirits labels to evaluate OCR extraction and validation across different label layouts and beverage types. Tests were implemented using pytest to validate:
 
 - Field extraction
 - Parsing logic
