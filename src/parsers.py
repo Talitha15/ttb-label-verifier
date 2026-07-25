@@ -358,9 +358,27 @@ def _select_brand_name(
             second_candidate,
             second_score,
         ) in candidates[first_position + 1:]:
-            if not _can_join_text(
-                first_candidate.text,
-                second_candidate.text,
+           
+            first_text = first_candidate.text.strip()
+            second_text = second_candidate.text.strip()
+
+            # Do not join a prominent brand with a multiword lowercase
+            # descriptive or marketing phrase.
+            first_is_lower_phrase = (
+                first_text.islower()
+                and len(first_text.split()) >= 3
+            )
+            second_is_lower_phrase = (
+                second_text.islower()
+                and len(second_text.split()) >= 3
+            )
+
+            if (
+                first_text.isupper()
+                and second_is_lower_phrase
+            ) or (
+                second_text.isupper()
+                and first_is_lower_phrase
             ):
                 continue
 
